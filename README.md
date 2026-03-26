@@ -151,7 +151,7 @@ pipeline-risc-systemc/
 │   │   └── unidade_controle.h / .cpp    # Unidade de Controle
 │   │
 │   └── top/
-│       └── processor.h / .cpp   # Integração PO + PC
+│       └── processador.h / .cpp   # Integração PO + PC
 │
 ├── sim/                         # Programas de teste (algoritmos)
 │   ├── algo1_bubble_sort.cpp
