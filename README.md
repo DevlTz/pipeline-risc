@@ -173,12 +173,12 @@ pipeline-risc-systemc/
 
 ## Módulos Implementados
 
-| Módulo | Arquivo | Função | Status |
+| Módulo | Arquivo | Função | |
 |:---|:---|:---|:---:|
 | **ULA** | `src/po/alu` | Operações AND, OR, XOR, NOT, ADD, SUB, CMP 
 | **Banco de Registradores** | `src/po/register_bank` | 8 registradores R0–R7, leitura dual-port 
-| **Memória de Instrução** | `src/po/memory` | ROM com 256 posições de 16 bits | 🔧 Em desenvolvimento
-| **Memória de Dados** | `src/po/memory` | RAM com 256 posições de 16 bits | 🔧 Em desenvolvimento 
+| **Memória de Instrução** | `src/po/memory` | ROM com 256 posições de 16 bits
+| **Memória de Dados** | `src/po/memory` | RAM com 256 posições de 16 bits
 | **Registradores de Pipeline** | `src/po/pipeline_regs` | IF/ID · ID/EX · EX/MEM · MEM/WB 
 | **Unidade de Controle** | `src/pc/control_unit` | Decodificação de opcode e sinais de controle
 | **Processador (Top)** | `src/top/processor` | Integração completa PO + PC 
