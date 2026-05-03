@@ -8,7 +8,7 @@ void ULA::process() {
     sc_int<16> res = 0;
     bool write_result = true;
 
-    // Implementação das operações baseada nos opcodes da ISA [cite: 5-11]
+    // Implementação das operações baseada nos opcodes da ISA
     switch(value_op.to_uint()){
         case 0: res = value_a & value_b; break; // AND
         case 1: res = value_a | value_b; break; // OR
