@@ -3,7 +3,7 @@
 
 #include <systemc.h>
 
-// Módulo responsável pelas operações matemáticas e lógicas [cite: 5-11]
+// Módulo responsável pelas operações matemáticas e lógicas
 SC_MODULE(ULA) {
     sc_in<sc_int<16>> a;
     sc_in<sc_int<16>> b;
