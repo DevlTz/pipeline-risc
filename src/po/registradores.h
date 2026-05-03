@@ -3,7 +3,7 @@
 
 #include <systemc.h>
 
-// Gerencia os 16 registradores de uso geral do processador [cite: 23]
+// Gerencia os 16 registradores de uso geral do processador
 SC_MODULE(BANCO_REG) {
     sc_in<sc_uint<4>> reg_read_1;
     sc_in<sc_uint<4>> reg_read_2;
