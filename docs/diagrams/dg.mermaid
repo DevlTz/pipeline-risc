@@ -1,0 +1,41 @@
+graph TD
+    subgraph STAGE_1_IF [Estágio IF - Instruction Fetch]
+        PC[PC - Contador de Programa] --> INST_MEM[Memória de Instruções]
+        ADD_PC[Somador PC+1] --> PC
+    end
+
+    INST_MEM --> IF_ID_REG((Registrador IF/ID))
+
+    subgraph STAGE_2_ID [Estágio ID - Instruction Decode]
+        IF_ID_REG --> CTRL[Unidade de Controle]
+        IF_ID_REG --> REG_FILE[Banco de Registradores]
+        CTRL --> HAZARD[Hazard Detection Unit]
+        HAZARD -.-> |Stall/Flush| PC
+        HAZARD -.-> |Stall/Flush| IF_ID_REG
+    end
+
+    REG_FILE --> ID_EX_REG((Registrador ID/EX))
+    CTRL --> ID_EX_REG
+
+    subgraph STAGE_3_EX [Estágio EX - Execute]
+        ID_EX_REG --> ULA[ULA - Unidade Lógica e Aritmética]
+        MUX_ALU[Mux Operando B] --> ULA
+    end
+
+    ULA --> EX_MEM_REG((Registrador EX/MEM))
+
+    subgraph STAGE_4_MEM [Estágio MEM - Memory]
+        EX_MEM_REG --> DATA_MEM[Memória de Dados]
+    end
+
+    DATA_MEM --> MEM_WB_REG((Registrador MEM/WB))
+    EX_MEM_REG --> MEM_WB_REG
+
+    subgraph STAGE_5_WB [Estágio WB - Write Back]
+        MUX_WB[Mux Write-Back] --> |Resultado| REG_FILE
+    end
+
+    %% Conexões de Controle e Feedback
+    CTRL -.-> |Sinais de Controle| ID_EX_REG
+    CTRL -.-> |Sinais de Controle| EX_MEM_REG
+    CTRL -.-> |Sinais de Controle| MEM_WB_REG

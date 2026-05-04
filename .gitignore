@@ -1,0 +1,24 @@
+# Binários (Executáveis)
+teste_uc
+teste_ula
+processador
+*.exe
+*.out
+
+# Arquivos de Objetos
+*.o
+
+# Arquivos de Simulação e Ondas (VCD)
+
+# *.vcd
+# wave
+
+# Descomenta isso ai de cima se vcs precisarem salvar os arquivos de simulação e ondas
+
+# Pastas de build
+build/
+bin/
+
+# Temporários do VS Code ou SO
+.vscode/
+.DS_Store
