@@ -1,0 +1,32 @@
+flowchart LR
+    R1[reg_read_1<br/>4 bits]
+    R2[reg_read_2<br/>4 bits]
+    RW[reg_write<br/>4 bits]
+    RES[res<br/>16 bits]
+    W[write]
+    CLK[clock]
+
+    subgraph BANCO["Banco de Registradores"]
+        REGS[(R0 .. R15<br/>16 x 16 bits)]
+        WEN[write == true <br/> AND reg != 0<br/>na subida do clock]
+    end
+
+    V1[value_1<br/>16 bits]
+    V2[value_2<br/>16 bits]
+
+    R1 -->|leitura| REGS
+    R2 -->|leitura| REGS
+    REGS --> V1
+    REGS --> V2
+
+    RW --> WEN
+    W --> WEN
+    CLK --> WEN
+    WEN -->|enable| REGS
+    RES --> REGS
+
+
+    class R1,R2,RW,RES,W,CLK input
+    class V1,V2 output
+    class REGS storage
+    class WEN ctrl

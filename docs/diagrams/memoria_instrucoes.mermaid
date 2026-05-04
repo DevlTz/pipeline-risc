@@ -1,0 +1,17 @@
+flowchart LR
+    ADDR[endereco<br/>8 bits<br/>PC]
+
+    subgraph ROM["Memória de Instruções"]
+        MEM[(ROM<br/>256 x 16 bits<br/>init = 0x0000 NOP)]
+        DEC[Decoder 8:256<br/>seleciona endereco]
+    end
+
+    INST[instrucao<br/>16 bits]
+
+    ADDR --> DEC --> MEM --> INST
+
+
+    class ADDR input
+    class INST output
+    class MEM storage
+    class DEC block

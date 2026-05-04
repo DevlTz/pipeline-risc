@@ -1,0 +1,58 @@
+flowchart LR
+    A[a<br/>16 bits]
+    B[b<br/>16 bits]
+    OP[op<br/>4 bits]
+
+    subgraph ULA[ULA]
+        direction TB
+
+        AND_U[AND<br/>bitwise]
+        OR_U[OR<br/>bitwise]
+        XOR_U[XOR<br/>bitwise]
+        NOT_U[NOT<br/>bitwise]
+        ADD_U[Somador<br/>a + b]
+        SUB_U[Subtrator<br/>a - b]
+
+        MUX[MUX 8:1<br/>seleciona operacao]
+
+        ZDET[Detector de zero<br/>res == 0]
+        NDET[Detector de negativo<br/>bit de sinal]
+
+        CMP[CMP]
+        WGATE[Gate de escrita]
+    end
+
+    RES[result<br/>16 bits]
+    FZ[flag_zero<br/>1 bit]
+    FN[flag_negative<br/>1 bit]
+
+    A --> AND_U
+    B --> AND_U
+    A --> OR_U
+    B --> OR_U
+    A --> XOR_U
+    B --> XOR_U
+    A --> NOT_U
+    A --> ADD_U
+    B --> ADD_U
+    A --> SUB_U
+    B --> SUB_U
+
+    AND_U --> MUX
+    OR_U --> MUX
+    XOR_U --> MUX
+    NOT_U --> MUX
+    ADD_U --> MUX
+    SUB_U --> MUX
+    OP --> MUX
+
+    MUX --> ZDET --> FZ
+    MUX --> NDET --> FN
+    MUX --> |ativa| WGATE
+    OP --> CMP -->|bloqueia| WGATE
+    WGATE --> RES
+
+    class A,B,OP input
+    class RES,FZ,FN output
+    class AND_U,OR_U,XOR_U,NOT_U,ADD_U,SUB_U,MUX block
+    class ZDET,NDET,CMP,WGATE ctrl
