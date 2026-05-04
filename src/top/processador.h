@@ -1,4 +1,4 @@
-.#ifndef PROCESSADOR_H
+#ifndef PROCESSADOR_H
 #define PROCESSADOR_H
 
 #include <systemc.h>
