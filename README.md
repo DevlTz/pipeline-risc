@@ -1,6 +1,6 @@
 <div align="center">
-  <img align="right" alt="logo imd" height="60" src="docs/assets/dimap.png">
-  <img align="left" alt="logo ufrn" height="60" src="docs/assets/ufrn-logo.png">
+  <img align="right" alt="logo imd" height="60" src="docs/imgs/dimap.png">
+  <img align="left" alt="logo ufrn" height="60" src="docs/imgs/ufrn-logo.png">
   <br/><br/><br/>
 
 # Processador RISC Pipelined em SystemC
@@ -13,7 +13,7 @@
 
 ---
 
-> 📄 Para mais detalhes, acesse o [Relatório](docs/relatorio.pdf).
+> 📄 Para mais detalhes, acesse o [Relatório](docs/notes/relatorio.pdf).
 
 Este repositório contém a implementação de um processador baseado na arquitetura **RISC** com organização em **Pipeline de 5 estágios**, desenvolvido em **SystemC**. O sistema é composto por uma **Parte Operativa (PO)** e uma **Parte de Controle (PC)**, integradas para executar um conjunto de 12 instruções.
 
