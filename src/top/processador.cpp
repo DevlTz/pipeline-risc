@@ -10,12 +10,12 @@ void PROCESSADOR::calcular_next_pc() {
     pc_plus_1.write(pc.read() + 1);
     if (id_jump.read() || id_branch.read()) {
         pc_next.write(id_pc.read() + id_imm.read());
-        if_id_flush.write(true);
-        id_ex_flush.write(true);
+        branch_flush.write(true);
+        branch_id_ex_flush.write(true);
     } else {
         pc_next.write(pc_plus_1.read());
-        if_id_flush.write(false);
-        id_ex_flush.write(false);
+        branch_flush.write(false);
+        branch_id_ex_flush.write(false);
     }
 }
 
@@ -27,7 +27,35 @@ void PROCESSADOR::selecionar_wb_data() {
     wb_write_data.write(wb_mem_to_reg.read() ? wb_mem_data.read() : wb_alu_result.read());
 }
 
-PROCESSADOR::SC_CTOR(PROCESSADOR) {
+void PROCESSADOR::converter_endereco_mem() {
+    // Pega só os 8 bits menos significativos do resultado da ULA
+    mem_endereco.write((sc_uint<8>)(mem_alu_result.read() & 0xFF));
+}
+
+void PROCESSADOR::combinar_flushes() {
+    // OR lógico: flush ocorre se houver hazard OU salto
+    if_id_flush.write(hazard_flush.read() || branch_flush.read());
+    id_ex_flush.write(branch_id_ex_flush.read());
+    // Nota: hazard de dados NÃO faz flush do ID/EX 
+    // (ele apenas congela o IF/ID e insere bolha via stall)
+}
+
+void PROCESSADOR::debug_estado() {
+    cout << "@" << sc_time_stamp()
+         << " | PC=" << pc.read()
+         << " | IF=0x" << hex << if_instrucao.read()
+         << " | ID=0x" << id_instrucao.read() << dec
+         << " | stall=" << if_id_stall.read()
+         << " | flush=" << if_id_flush.read()
+         << " | jump=" << id_jump.read()
+         << " | branch=" << id_branch.read()
+         << " | EX_res=" << ex_alu_result.read()
+         << " | MEM_W=" << mem_mem_write.read()
+         << endl;
+}
+
+
+PROCESSADOR::PROCESSADOR(sc_module_name name) : sc_module(name) {
     // Instanciação dos módulos
     mem_instrucao = new MEMORIA_INSTRUCAO("MEM_INSTR");
     mem_dados = new MEMORIA_DADOS("MEM_DADOS");
@@ -53,7 +81,7 @@ PROCESSADOR::SC_CTOR(PROCESSADOR) {
     reg_if_id->pc_out(id_pc);
 
     controle->instrucao(id_instrucao);
-    controle->flag_zero(mem_flag_zero); // Forwarding de flags do estágio MEM
+    controle->flag_zero(mem_flag_zero);
     controle->flag_neg(mem_flag_neg);
     controle->opcode(id_opcode);
     controle->reg_destino(id_rd);
@@ -91,7 +119,7 @@ PROCESSADOR::SC_CTOR(PROCESSADOR) {
     hazard_unit->ex_rd(ex_rd);
     hazard_unit->ex_mem_read(ex_mem_read);
     hazard_unit->stall(if_id_stall);
-    hazard_unit->flush_if_id(if_id_flush);
+    hazard_unit->flush_if_id(hazard_flush);
 
     // ID/EX Pipeline Register
     reg_id_ex->clock(clock);
@@ -142,7 +170,7 @@ PROCESSADOR::SC_CTOR(PROCESSADOR) {
 
     // Memória de Dados
     mem_dados->clock(clock);
-    mem_dados->endereco(mem_alu_result);
+    mem_dados->endereco(mem_endereco);
     mem_dados->dado_entrada(mem_dado_rs2);
     mem_dados->mem_read(mem_mem_read);
     mem_dados->mem_write(mem_mem_write);
@@ -166,6 +194,10 @@ PROCESSADOR::SC_CTOR(PROCESSADOR) {
     SC_METHOD(calcular_next_pc); sensitive << pc << id_jump << id_branch << id_imm << id_pc;
     SC_METHOD(selecionar_alu_input_b); sensitive << ex_alu_src << ex_imm << ex_dado_rs2;
     SC_METHOD(selecionar_wb_data); sensitive << wb_mem_to_reg << wb_mem_data << wb_alu_result;
+    SC_METHOD(converter_endereco_mem); sensitive << mem_alu_result;
+    SC_METHOD(combinar_flushes); sensitive << hazard_flush << branch_flush << branch_id_ex_flush;
+    SC_METHOD(debug_estado); sensitive << clock.pos();
+
 }
 
 PROCESSADOR::~PROCESSADOR() {

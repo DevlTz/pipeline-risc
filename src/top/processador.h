@@ -21,7 +21,10 @@ SC_MODULE(PROCESSADOR) {
     // IF/ID Pipeline
     sc_signal<sc_uint<16>> id_instrucao;
     sc_signal<sc_uint<8>> id_pc;
-    sc_signal<bool> if_id_flush, if_id_stall;
+    sc_signal<bool> if_id_flush;          // sinal final que vai ao registrador IF/ID
+    sc_signal<bool> if_id_stall;
+    sc_signal<bool> hazard_flush;         // flush vindo da unidade de hazard
+    sc_signal<bool> branch_flush;         // flush vindo do salto
     
     // ID Stage - Sinais da Unidade de Controle
     sc_signal<sc_uint<4>> id_opcode, id_rd, id_rs1, id_rs2, id_alu_op;
@@ -32,7 +35,9 @@ SC_MODULE(PROCESSADOR) {
     sc_signal<sc_int<16>> ex_dado_rs1, ex_dado_rs2, ex_imm;
     sc_signal<sc_uint<4>> ex_rd, ex_alu_op;
     sc_signal<sc_uint<8>> ex_pc;
-    sc_signal<bool> ex_alu_src, ex_mem_read, ex_mem_write, ex_reg_write, ex_mem_to_reg, id_ex_flush;
+    sc_signal<bool> ex_alu_src, ex_mem_read, ex_mem_write, ex_reg_write, ex_mem_to_reg;
+    sc_signal<bool> id_ex_flush;          // sinal final que vai ao registrador ID/EX
+    sc_signal<bool> branch_id_ex_flush;   // flush ID/EX vindo do salto
     
     // EX Stage - ULA
     sc_signal<sc_int<16>> ex_alu_input_b, ex_alu_result;
@@ -40,6 +45,7 @@ SC_MODULE(PROCESSADOR) {
     
     // EX/MEM Pipeline
     sc_signal<sc_int<16>> mem_alu_result, mem_dado_rs2;
+    sc_signal<sc_uint<8>> mem_endereco;   // endereço de 8 bits para memória de dados
     sc_signal<sc_uint<4>> mem_rd;
     sc_signal<bool> mem_flag_zero, mem_flag_neg, mem_mem_read, mem_mem_write, mem_reg_write, mem_mem_to_reg;
     
@@ -71,8 +77,13 @@ SC_MODULE(PROCESSADOR) {
     void calcular_next_pc();
     void selecionar_alu_input_b();
     void selecionar_wb_data();
+    void converter_endereco_mem();
+    void combinar_flushes();
+    void debug_estado();
+
     
-    SC_CTOR(PROCESSADOR);
+    SC_HAS_PROCESS(PROCESSADOR);
+    PROCESSADOR(sc_module_name name);
     ~PROCESSADOR();
 };
 

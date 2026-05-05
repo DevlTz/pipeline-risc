@@ -13,7 +13,7 @@ SC_MODULE(REG_IF_ID) {
     sc_in<bool> stall;                    // Congelar registrador (para hazards)
     sc_in<sc_uint<16>> instrucao_in;      // Instrução vinda da memória
     sc_in<sc_uint<8>> pc_in;              // PC + 1
-    
+        
     // Saídas
     sc_out<sc_uint<16>> instrucao_out;
     sc_out<sc_uint<8>> pc_out;
